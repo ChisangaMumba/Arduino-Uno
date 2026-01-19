@@ -1,0 +1,42 @@
+//-----------------------------------------------------------------------------------
+// #include "assets/tm1637/tm1637.c"
+// #include "assets/ds1620/ds1620.c"
+#include "assets/ds1620/DS1620.cpp"
+//-----------------------------------------------------------------------------------
+static const uint8_t RST_PIN = 3;  // pin 3 on DS1620
+static const uint8_t CLK_PIN = 2;  // pin 2 on DS1620
+static const uint8_t DQ_PIN  = 4;  // pin 1 on DS1620
+
+DS1620 ds1620(RST_PIN, CLK_PIN, DQ_PIN);
+void setup()
+{
+  Serial.begin(9600);
+  delay(100);
+  ds1620.config();
+  //TM1637_init(7);
+
+  // threeWire_init();
+	//Set thermostat high and low values (entirely optional)
+	// ds1620_writeT_HL(WRITE_TH, 30);
+	// ds1620_writeT_HL(WRITE_TL, -10);
+}
+//-----------------------------------------------------------------------------------
+uint8_t str[10];
+signed int rawTempr;
+void loop() 
+{
+  // rawTempr = ds1620_read(READ_TEMPR);
+  // sprintf(str, "%4i°c", calcTempr(rawTempr));
+  // sprintf(str, "%4i", rawTempr);
+  // TM1637_displayNumText(str);
+  // TM1637_displayNumText("287");
+
+  const float temp_c = ds1620.temp_c();
+  const float temp_f = temp_c * 9/5.0 + 32;
+
+  Serial.print(temp_f, 1);  // 1 decimal place
+  Serial.print("F ");
+  Serial.print(temp_c, 1);
+  Serial.println("C");
+}
+//-----------------------------------------------------------------------------------
